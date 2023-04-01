@@ -220,3 +220,131 @@ line,
 replace(translate(line, '0123456789.', '###########'), '#', '') name,
 format(cast(replace(line, replace(translate(line, '0123456789.','###########'), '#', ''), '') as numeric(18,2)) * 1.115, 'c', 'pt-br') salary_with_raise
 from testando
+
+use SQL_COOKBOOK
+select
+data
+,replace(translate(data, '0123456789', '**********'), '*', '') nome
+,replace(data, replace(translate(data, '1234567890', '**********'), '*', ''), '') job
+from V
+
+--- Dealing with nulls when sorting
+
+select
+e.ENAME, 
+e.SAL,
+e.COMM
+from emp e
+order by 3 
+
+select
+e.ENAME, 
+e.SAL,
+e.COMM,
+E.is_null
+from (select e.ENAME, 
+			 e.SAL, 
+			 e.COMM,
+			 case when comm is null or comm = '' then 0 
+			 else 1 
+			 end as is_null 
+		from emp e) e
+order by e.is_null , COMM asc
+
+select
+e.ename
+,e.SAL
+,e.JOB
+,e.COMM
+from emp e
+order by case when e.JOB = 'SALESMAN' then e.COMM else e.SAL end
+
+
+select ename,sal,job,comm
+from emp
+order by case when job = 'SALESMAN' then COMM else sal end
+
+select e.ENAME, e.SAL, e.JOB, e.COMM,
+		case when e.JOB = 'SALESMAN' then e.COMM else sal end as ordered
+from emp e
+order by ordered
+
+--Summming up
+select top 5 *
+from emp e
+order by NEWID()
+
+select * from emp
+
+--- Chapter 3
+--- Working with Multiple Tables
+
+select
+emp.ENAME,
+emp.DEPTNO
+from emp
+where emp.DEPTNO = 10
+
+union all
+select '-------------', ' '
+union all
+
+select
+dept.DNAME,
+dept.DEPTNO
+from dept
+
+select 
+emp.DEPTNO
+from emp
+union
+select
+dept.DEPTNO
+from dept
+
+
+SELECT DISTINCT DEPTNO FROM(
+select 
+emp.DEPTNO
+from emp
+union ALL
+select
+dept.DEPTNO
+from dept) X
+
+--equi-join, a type of inner join
+select 
+e.ENAME, d.LOC
+from emp e, dept d
+where e.DEPTNO = d.DEPTNO
+and e.DEPTNO = 10
+
+select
+e.ename, d.loc
+from emp e join dept d
+	on (e.DEPTNO = d.DEPTNO)
+where e.DEPTNO = 10
+
+drop view V
+
+create view V
+as
+select e.ENAME, e.JOB, e.SAL from emp e
+where e.JOB = 'clerk'
+
+select * from V
+
+select 
+e.EMPNO
+,v.ENAME
+,v.JOB
+,v.SAL
+,e.DEPTNO
+from V v
+inner join emp e
+ on (e.ENAME = v.ENAME and v.JOB = e.JOB and v.SAL = e.SAL)
+
+
+/********************************************************************************************/
+/*** Continuar da página 34 Retrieving Values from One Table That Do Not Exist in Another ***/
+/********************************************************************************************/
