@@ -109,98 +109,98 @@ select
 from emp e
 order by substring(job, len(job) - 1, 2)
 
-create view V
-as
-select e.ENAME + ' ' + e.DEPTNO as data
-from emp e
+--create view V
+--as
+--select e.ENAME + ' ' + e.DEPTNO as data
+--from emp e
 
-select * from V
+--select * from V
 
-select
-data
-from V
-order by substring(data, len(data) - 1,  2)
+--select
+--data
+--from V
+--order by substring(data, len(data) - 1,  2)
 
-select 
-data
-from V
-order by right(data, 2)
+--select 
+--data
+--from V
+--order by right(data, 2)
 
-select 
-data
-from V
-order by substring(data, len(data) - len(data) + 1, 2)
+--select 
+--data
+--from V
+--order by substring(data, len(data) - len(data) + 1, 2)
 
---better solution than substring
---order by deptno
-select
-data
-from V
-order by replace(data,
-		 replace(
-		 translate(data, '0123456789', '##########'), '#',''),'')
+----better solution than substring
+----order by deptno
+--select
+--data
+--from V
+--order by replace(data,
+--		 replace(
+--		 translate(data, '0123456789', '##########'), '#',''),'')
 
---order by ename
-select data
-from V
-order by replace(
-		 translate(data, '0123456789', '##########'),'#','')
+----order by ename
+--select data
+--from V
+--order by replace(
+--		 translate(data, '0123456789', '##########'),'#','')
 
-use SQL_COOKBOOK
+--use SQL_COOKBOOK
 
-select 
-	data,
-	replace(data,
-	replace(
-	translate(data, '0123456789', '##########'),'#', ''),'') nums,
-	replace(
-	translate(data, '0123456789', '##########'), '#', '') chars
-from v
-
-
-
-----cte
-
-with tabela as (
-	select 	'sinval' + ' ' + '40' as data
-)
-
-select 
-	 data, 
-	 replace(translate(data, '0123456789', '##########'), '#', '') nome,
-	 replace(data, replace(translate(data, '0123456789', '##########'),'#', ''), '') idade,
-	 len(replace(translate(data, '0123456789', '##########'), '#', '')) nomeTamanho,
-	 len(replace(data, replace(translate(data, '0123456789', '##########'),'#', ''), '')) idadeTamanho
-	 ,translate(data, '0123456789', '##########') translate_numeros
-	 ,translate(data, 'abcdefghijklmnopqrstuvwxyz', '##########################') letras
-	 ,replace(data, replace(translate(data, '0123456789', '##########'), '#', ''), '') so_numeros
-	 ,replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', '##########################'), '#', '')
-
-from tabela
-
-select
-data
-,replace(translate(data, '0123456789', '$$$$$$$$$$'), '$', '') nome
-,replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', '&&&&&&&&&&&&&&&&&&&&&&&&&&'), '&', '') idade
-from V
-	order by replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', '&&&&&&&&&&&&&&&&&&&&&&&&&&'), '&', '') --idade
+--select 
+--	data,
+--	replace(data,
+--	replace(
+--	translate(data, '0123456789', '##########'),'#', ''),'') nums,
+--	replace(
+--	translate(data, '0123456789', '##########'), '#', '') chars
+--from v
 
 
-select 
-data
-,replace(translate(data, '0123456789', '##########'), '#', '') nome
-,replace(data, replace(translate(data, '0123456789', '##########'), '#', ''), '') idade 
---de dentro pra fora: pego os numeros e troco #, 
---depois substituo os # por '', pra pegar o nome, 
---depois substituo o nome, por '', pra ter o número.
-from V
+
+------cte
+
+--with tabela as (
+--	select 	'sinval' + ' ' + '40' as data
+--)
+
+--select 
+--	 data, 
+--	 replace(translate(data, '0123456789', '##########'), '#', '') nome,
+--	 replace(data, replace(translate(data, '0123456789', '##########'),'#', ''), '') idade,
+--	 len(replace(translate(data, '0123456789', '##########'), '#', '')) nomeTamanho,
+--	 len(replace(data, replace(translate(data, '0123456789', '##########'),'#', ''), '')) idadeTamanho
+--	 ,translate(data, '0123456789', '##########') translate_numeros
+--	 ,translate(data, 'abcdefghijklmnopqrstuvwxyz', '##########################') letras
+--	 ,replace(data, replace(translate(data, '0123456789', '##########'), '#', ''), '') so_numeros
+--	 ,replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', '##########################'), '#', '')
+
+--from tabela
+
+--select
+--data
+--,replace(translate(data, '0123456789', '$$$$$$$$$$'), '$', '') nome
+--,replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', '&&&&&&&&&&&&&&&&&&&&&&&&&&'), '&', '') idade
+--from V
+--	order by replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', '&&&&&&&&&&&&&&&&&&&&&&&&&&'), '&', '') --idade
 
 
-SELECT REPLACE('SINVAL','SINVAL', 'SINVAL, A LENDA')
+--select 
+--data
+--,replace(translate(data, '0123456789', '##########'), '#', '') nome
+--,replace(data, replace(translate(data, '0123456789', '##########'), '#', ''), '') idade 
+----de dentro pra fora: pego os numeros e troco #, 
+----depois substituo os # por '', pra pegar o nome, 
+----depois substituo o nome, por '', pra ter o número.
+--from V
 
-SELECT REPLICATE('EUTEAMO ', 9*8*7*6*5*4*3*2*1)
 
-select replicate('&', len('abcdefghijklmnopqrstuvwxyz'))
+--SELECT REPLACE('SINVAL','SINVAL', 'SINVAL, A LENDA')
+
+--SELECT REPLICATE('EUTEAMO ', 9*8*7*6*5*4*3*2*1)
+
+--select replicate('&', len('abcdefghijklmnopqrstuvwxyz'))
 
 
 
@@ -208,25 +208,25 @@ select replicate('&', len('abcdefghijklmnopqrstuvwxyz'))
 /*** Continuar da página 21 Dealing with Nulls When Sorting ***/
 /**************************************************************/
 
-with testando as
-(
-	select
-	concat(e.ENAME, ' ', e.SAL) as line
-	from emp e
-)
+--with testando as
+--(
+--	select
+--	concat(e.ENAME, ' ', e.SAL) as line
+--	from emp e
+--)
 
-select
-line,
-replace(translate(line, '0123456789.', '###########'), '#', '') name,
-format(cast(replace(line, replace(translate(line, '0123456789.','###########'), '#', ''), '') as numeric(18,2)) * 1.115, 'c', 'pt-br') salary_with_raise
-from testando
+--select
+--line,
+--replace(translate(line, '0123456789.', '###########'), '#', '') name,
+--format(cast(replace(line, replace(translate(line, '0123456789.','###########'), '#', ''), '') as numeric(18,2)) * 1.115, 'c', 'pt-br') salary_with_raise
+--from testando
 
-use SQL_COOKBOOK
-select
-data
-,replace(translate(data, '0123456789', '**********'), '*', '') nome
-,replace(data, replace(translate(data, '1234567890', '**********'), '*', ''), '') job
-from V
+--use SQL_COOKBOOK
+--select
+--data
+--,replace(translate(data, '0123456789', '**********'), '*', '') nome
+--,replace(data, replace(translate(data, '1234567890', '**********'), '*', ''), '') job
+--from V
 
 --- Dealing with nulls when sorting
 
@@ -327,24 +327,199 @@ where e.DEPTNO = 10
 
 drop view V
 
-create view V
-as
-select e.ENAME, e.JOB, e.SAL from emp e
-where e.JOB = 'clerk'
+--create view V
+--as
+--select e.ENAME, e.JOB, e.SAL from emp e
+--where e.JOB = 'clerk'
 
-select * from V
+--select * from V
 
-select 
-e.EMPNO
-,v.ENAME
-,v.JOB
-,v.SAL
-,e.DEPTNO
-from V v
-inner join emp e
- on (e.ENAME = v.ENAME and v.JOB = e.JOB and v.SAL = e.SAL)
+--select 
+--e.EMPNO
+--,v.ENAME
+--,v.JOB
+--,v.SAL
+--,e.DEPTNO
+--from V v
+--inner join emp e
+-- on (e.ENAME = v.ENAME and v.JOB = e.JOB and v.SAL = e.SAL)
 
 
 /********************************************************************************************/
 /*** Continuar da página 34 Retrieving Values from One Table That Do Not Exist in Another ***/
 /********************************************************************************************/
+
+select 
+d.DEPTNO
+from dept d
+left join emp e on (e.DEPTNO = d.DEPTNO) 
+where e.DEPTNO is null
+
+select 
+d.DEPTNO
+from dept d
+where d.DEPTNO not in (select distinct DEPTNO from emp)
+
+select DEPTNO from dept
+except
+select deptno from emp
+
+--create table new_dept(deptno integer)
+insert into new_dept values(10), (50), (null)
+
+select *
+from dept
+where deptno not in (select DEPTNO from new_dept)
+
+select *
+from dept
+where deptno in (10, 50, null)
+
+select *
+from dept 
+where (deptno=10 or deptno = 50 or deptno=null)
+
+select *
+from dept
+where deptno not in (select DEPTNO from new_dept where deptno is not null) --excluír resultados nulos pra não dar problemas com a tabela verdade...
+
+
+select * from dept
+
+select * from new_dept
+
+select * from dept where DEPTNO not in (select DEPTNO from new_dept)
+
+select *
+from dept d
+where not exists (
+select 0
+from new_dept nd
+where d.deptno = nd.deptno
+)
+
+
+
+select
+*
+from dept d
+where not exists (select 0 from emp where emp.DEPTNO = d.DEPTNO)
+
+select d.*
+from dept d
+left join emp e
+	on (d.DEPTNO = e.DEPTNO)
+where e.DEPTNO is null
+
+
+select
+e.ENAME, e.DEPTNO as emp_depto, d.*
+from dept d
+left outer join emp e
+on (d.DEPTNO = e.DEPTNO)
+
+--create table emp_bonus (empno integer, received date, type integer)
+insert into emp_bonus values (7369, getdate(), 1), (7900, getdate(), 2 ), (7788, getdate(), 3)
+
+select e.ename, d.loc, eb.received
+  from emp e join dept d 
+	on (e.DEPTNO = d.DEPTNO) --or inner join
+  left join emp_bonus eb 
+	on (eb.empno = e.EMPNO)
+order by 2
+
+select e.ename, d.loc, 
+	   (select eb.received from emp_bonus eb 
+	     where eb.empno = e.EMPNO) as received
+  from emp e, dept d
+ where e.DEPTNO = d.DEPTNO
+order by 2
+
+--select e.DEPTNO,
+--	   e.ENAME,
+--	   e.SAL,
+--	   (select d.dname, d.loc, getdate() today 
+--	      from dept d 
+--		 where e.deptno=d.deptno)
+--  from emp e
+
+--3.7 Determining wheter 2 tables have the same data
+--create view V
+--as
+--select * from emp where DEPTNO != 10
+--union all
+--select * from emp where ename = 'WARD'
+
+(
+select V.EMPNO, V.ENAME, V.JOB, V.MGR, V.HIREDATE, V.SAL, V.COMM, V.DEPTNO, count(*) as cnt
+  from V
+group by V.EMPNO, V.ENAME, V.JOB, V.MGR, V.HIREDATE, V.SAL, V.COMM, V.DEPTNO
+except
+select emp.EMPNO, emp.ENAME, emp.JOB, emp.MGR, emp.HIREDATE, emp.SAL, emp.COMM, emp.DEPTNO, count(*) as cnt
+  from emp
+group by emp.EMPNO, emp.ENAME, emp.JOB, emp.MGR, emp.HIREDATE, emp.SAL, emp.COMM, emp.DEPTNO
+)
+union all
+(
+select emp.EMPNO, emp.ENAME, emp.JOB, emp.MGR, emp.HIREDATE, emp.SAL, emp.COMM, emp.DEPTNO, count(*) as cnt
+  from emp
+group by emp.EMPNO, emp.ENAME, emp.JOB, emp.MGR, emp.HIREDATE, emp.SAL, emp.COMM, emp.DEPTNO
+except
+select V.EMPNO, V.ENAME, V.JOB, V.MGR, V.HIREDATE, V.SAL, V.COMM, V.DEPTNO, count(*) as cnt
+  from V
+group by V.EMPNO, V.ENAME, V.JOB, V.MGR, V.HIREDATE, V.SAL, V.COMM, V.DEPTNO
+)
+
+--outra forma de fazer somente no sql server
+
+select *
+  from (
+  select e.empno,e.ename,e.job,e.mgr,e.hiredate,
+	     e.sal,e.comm,e.deptno, count(*) as cnt
+	from emp e
+	group by e.empno,e.ename,e.job,e.mgr,e.hiredate,
+	     e.sal,e.comm,e.deptno
+  ) e
+  where not exists (
+	select null
+	  from (
+		select empno,ename,job,mgr,hiredate, 
+			   sal,comm,deptno, count(*) as cnt
+		from V 
+		group by empno,ename,job,mgr,hiredate, sal,comm,deptno
+	  ) v
+	  where v.empno				= e.EMPNO
+		and v.cnt				= e.DEPTNO
+	    and v.ename				= e.ENAME
+		and v.job				= e.JOB
+		and coalesce(v.mgr, 0)	= coalesce(e.mgr, 0)
+		and v.hiredate			= e.HIREDATE
+		and v.sal				= e.SAL
+		and coalesce(v.comm, 0)	= coalesce(e.COMM, 0)
+		and v.cnt				= e.cnt
+  )
+  union all
+  select * from (
+	select empno,ename,job,mgr,hiredate, sal,comm,deptno, count(*) as cnt
+	  from V
+	group by empno,ename,job,mgr,hiredate, sal,comm,deptno
+  ) v
+  where not exists (
+  select null 
+    from (
+	select e.empno,e.ename,e.job,e.mgr,e.hiredate,
+	     e.sal,e.comm,e.deptno, count(*) as cnt
+	  from emp e
+	group by e.empno,e.ename,e.job,e.mgr,e.hiredate,
+	     e.sal,e.comm,e.deptno
+	) e
+	  where v.empno				= e.EMPNO
+		and v.cnt				= e.DEPTNO
+	    and v.ename				= e.ENAME
+		and v.job				= e.JOB
+		and coalesce(v.mgr, 0)	= coalesce(e.mgr, 0)
+		and v.hiredate			= e.HIREDATE
+		and v.sal				= e.SAL
+		and coalesce(v.comm, 0)	= coalesce(e.COMM, 0)
+		and v.cnt				= e.cnt
+  )
