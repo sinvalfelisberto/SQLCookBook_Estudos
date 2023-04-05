@@ -472,8 +472,8 @@ group by V.EMPNO, V.ENAME, V.JOB, V.MGR, V.HIREDATE, V.SAL, V.COMM, V.DEPTNO
 
 --outra forma de fazer somente no sql server
 
-select *
-  from (
+select * --ok
+  from ( --ok
   select e.empno,e.ename,e.job,e.mgr,e.hiredate,
 	     e.sal,e.comm,e.deptno, count(*) as cnt
 	from emp e
@@ -489,7 +489,7 @@ select *
 		group by empno,ename,job,mgr,hiredate, sal,comm,deptno
 	  ) v
 	  where v.empno				= e.EMPNO
-		and v.cnt				= e.DEPTNO
+		and v.cnt				= e.cnt
 	    and v.ename				= e.ENAME
 		and v.job				= e.JOB
 		and coalesce(v.mgr, 0)	= coalesce(e.mgr, 0)
@@ -514,7 +514,7 @@ select *
 	     e.sal,e.comm,e.deptno
 	) e
 	  where v.empno				= e.EMPNO
-		and v.cnt				= e.DEPTNO
+		and v.deptno			= e.DEPTNO
 	    and v.ename				= e.ENAME
 		and v.job				= e.JOB
 		and coalesce(v.mgr, 0)	= coalesce(e.mgr, 0)
@@ -526,3 +526,95 @@ select *
 /********************************************/
 /******  continuar da página 46 *************/
 /********************************************/
+
+select count(*) from emp e
+union
+select count(*) from dept d
+
+select *, count(*) ctn from V group by *, ctn
+where not exists (select *, count(*) ctn from emp)
+
+select * from emp where not exists (select * from V)
+
+--3.1 Stacking One Rowset atop Another
+
+	select ename ename_and_dname, deptno from emp
+	where deptno = 10
+	union all
+	select '---------------', null
+	union all
+	select dname, deptno from dept
+
+	select deptno from emp
+	union
+	select deptno from dept
+
+
+--3.2 Combining Related Rows
+
+select e.ename, d.LOC from emp e, dept d
+where (e.DEPTNO = d.DEPTNO) 
+	  and e.DEPTNO = 10
+
+	  --join//equi-join a type of inner join 
+
+/** Aqui a lógica do join está no where **/
+select   e.ENAME
+		,d.LOC
+		,e.DEPTNO as émp_deptno
+		,d.DEPTNO as dept_deptno
+from emp e, dept d
+where e.deptno = d.deptno and e.DEPTNO = 10
+
+/** Aqui a lógica do join está no FROM **/
+select e.ename, d.LOC from emp e
+ inner join dept d
+	on (e.DEPTNO = d.DEPTNO)
+ where e.DEPTNO = 10
+
+ --3.3 Finding Rows in Common Between Two Tables
+
+ --create view Vi
+ --as
+ --select
+ --ename, job, sal
+ --from emp where job = 'CLERK'
+
+select * from Vi
+
+select * from emp
+
+select e.EMPNO,
+	   v.ename,
+	   v.job,
+	   v.sal,
+	   e.DEPTNO
+from Vi v
+left join emp e
+	on (e.ENAME = v.ename)
+
+select 
+	e.EMPNO
+	,v.ename
+	,v.job
+	,v.sal
+	,e.DEPTNO
+ from emp e, Vi v
+where e.ename = v.ename
+  and e.job = v.job
+  and e.sal = v.sal
+
+select 
+	e.EMPNO
+	,v.ename
+	,v.job
+	,v.sal
+	,e.DEPTNO
+from emp e join Vi v
+	on (e.ename = v.ename
+	and e.job = v.job
+	and e.sal = v.sal)
+
+	select empno, ename, job, sal, deptno from emp
+	where (ename, job, sal) in (select ename, job, sal, from emp intersect select ename, job, sal from Vi)
+
