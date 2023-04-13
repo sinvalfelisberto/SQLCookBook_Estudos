@@ -720,3 +720,75 @@ DEPTNO	total_sal	total_bonus
 10		8750.00		2135.00
 we need to use distinct to sum only one time the the salary of each employee.
 */
+
+--another way
+select distinct deptno,total_sal, total_bonus
+from (
+select  e.empno,
+		e.ename,
+		sum(distinct SAL) over (partition by  e.deptno) as total_sal,
+	    e.deptno,
+		sum(e.sal*case when eb.type = 1 then .1
+					   when eb.type = 2 then .2
+					   else .3 end) over
+		(partition by deptno) as total_bonus
+ from emp e, emp_bonus eb
+ where e.empno = eb.empno
+ and e.deptno = 10
+ ) x
+
+
+ SELECT e.deptno, 
+		SUM(e.sal) AS total_sal, 
+		SUM(e.sal * CASE WHEN eb.type = 1 THEN 0.1
+                         WHEN eb.type = 2 THEN 0.2
+                         WHEN eb.type = 3 THEN 0.3
+                         ELSE 0.0 END) AS total_bonus
+  FROM emp e
+ INNER JOIN emp_bonus eb ON e.empno = eb.empno
+ WHERE e.deptno = 10
+ GROUP BY e.deptno
+
+
+
+ select 
+ sum(sal) over (partition by emp.deptno) as total_sal_dept
+ ,* from emp
+
+ create table sales_table
+ (
+	id int identity primary key not null,
+	product varchar(1) not null,
+	sales numeric(18,2) not null
+ )
+
+ insert into sales_table values ('A', 100.00), ('A', 200.00), ('B', 150.00), ('B', 350.00)
+
+
+ select distinct a.product, a.total_sales from
+ (
+ select
+		st.id, 
+		st.product,
+		st.sales,
+		sum(st.sales) over (partition by st.product) as total_sales
+ from sales_table st
+ ) a
+
+
+
+ select  deptno,total_sal,total_bonus
+	from (
+ SELECT e.deptno, 
+		SUM(distinct e.sal) AS total_sal, 
+		SUM(distinct e.sal * CASE WHEN eb.type = 1 THEN 0.1
+                         WHEN eb.type = 2 THEN 0.2
+                         WHEN eb.type = 3 THEN 0.3
+                         ELSE 0.0 END) AS total_bonus
+  FROM emp e
+ INNER JOIN emp_bonus eb ON e.empno = eb.empno
+ WHERE e.deptno = 10
+ GROUP BY e.deptno
+ ) x
+
+
