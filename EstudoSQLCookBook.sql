@@ -615,6 +615,108 @@ from emp e join Vi v
 	and e.job = v.job
 	and e.sal = v.sal)
 
-	select empno, ename, job, sal, deptno from emp
-	where (ename, job, sal) in (select ename, job, sal, from emp intersect select ename, job, sal from Vi)
+--3.8 Identifying and Avoiding Cartesian Products
 
+--Problem: You want to return the name of each employee in departament 10 along with the location of the department. The following query is returning incorrect data:
+
+use SQL_COOKBOOK
+select e.ename, d.loc from emp e, dept d
+where e.DEPTNO = 10 
+
+--solution 
+select e.ename, d.loc from emp e, dept d
+where e.DEPTNO = d.DEPTNO -- we need to add the joining keys
+and e.DEPTNO = 10 
+
+--3.9 Performing Joins When Using Aggregates
+
+--Problem
+/*
+You want to perform aggregation, but your query involves multiple tables. you want to ensure that joins do not disrupt the aggregation. For example, you want
+to find the sum of the salaries for employees in department 10 along(junto) with the sum of their bunuses. Some employee have more than one bonus, and join 
+between table emp and table emp_bonus is causing incorrect values to be returned by the aggregate function sum. For this problem, table emp_bonus contains 
+the following data:
+*/
+
+--EMPNO	RECEIVED	TYPE
+--7934	17/03/2005	1
+--7934	15/03/2005	2
+--7839	15/02/2005	3
+--7782	15/02/2005	1
+
+CREATE TABLE emp_bonus 
+(
+	EMPNO VARCHAR(4),
+	RECEIVED DATE,
+	TYPE INT
+)
+
+INSERT INTO emp_bonus values ('7934', '17/03/2005',	1),
+('7934', '15/03/2005',2), ('7839', '15/02/2005',3), ('7782', '15/02/2005',1) 
+select * from emp_bonus
+
+select e.EMPNO,
+	   e.ENAME,
+	   e.SAL,
+	   e.DEPTNO,
+	   cast(e.sal * case when eb.type = 1 then 0.1
+					when eb.type = 2 then 0.2
+					when eb.type = 3 then 0.3
+					else 0.0
+					end as numeric(18,2)) as bonus
+from emp e, emp_bonus eb
+where e.EMPNO = eb.empno
+and e.DEPTNO = 10
+
+select e.DEPTNO,
+	   sum(e.SAL) as total_sal,
+	   sum(e.bonus) as total_bonus
+
+from (
+select e.EMPNO,
+	   e.ENAME,
+	   e.SAL,
+	   e.DEPTNO,
+	   cast(e.sal * case when eb.type = 1 then 0.1
+					when eb.type = 2 then 0.2
+					when eb.type = 3 then 0.3
+					else 0.0
+					end as numeric(18,2)) as bonus
+from emp e, emp_bonus eb
+where e.EMPNO = eb.empno
+and e.DEPTNO = 10 ) e
+group by e.DEPTNO
+
+/*
+DEPTNO	total_sal	total_bonus
+10		10050.00	2135.00
+
+total sal is wrong!
+*/
+
+
+
+select e.DEPTNO,
+	   sum(distinct e.SAL) as total_sal,
+	   sum(e.bonus) as total_bonus
+
+from (
+select e.EMPNO,
+	   e.ENAME,
+	   e.SAL,
+	   e.DEPTNO,
+	   cast(e.sal * case when eb.type = 1 then 0.1
+					when eb.type = 2 then 0.2
+					when eb.type = 3 then 0.3
+					else 0.0
+					end as numeric(18,2)) as bonus
+from emp e, emp_bonus eb
+where e.EMPNO = eb.empno
+and e.DEPTNO = 10 ) e
+group by e.DEPTNO
+
+/*
+DEPTNO	total_sal	total_bonus
+10		8750.00		2135.00
+we need to use distinct to sum only one time the the salary of each employee.
+*/
