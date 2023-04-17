@@ -792,3 +792,112 @@ select  e.empno,
  ) x
 
 
+ --3.11 Returning Missing Data from Multiple Tables
+
+ select
+	 d.DEPTNO
+	,d.DNAME
+	,e.ENAME
+ from dept d
+ left outer join emp e on e.DEPTNO = d.DEPTNO
+
+ insert into emp(EMPNO, ename, job, mgr, HIREDATE, sal, COMM, DEPTNO)
+ select 1111, 'YODA', 'JEDI', NULL, HIREDATE, SAL, COMM, null
+ from emp
+ where ENAME = 'KING'
+
+ --DELETE FROM EMP
+ --WHERE EMPNO = 1111
+
+ select 
+ d.DEPTNO, d.DNAME, e.ENAME
+ from dept d 
+ right outer join emp e on e.DEPTNO = d.DEPTNO
+
+  select 
+ d.DEPTNO, d.DNAME, e.ENAME
+ from dept d 
+ full outer join emp e on e.DEPTNO = d.DEPTNO
+
+ select 
+ d.DEPTNO, d.DNAME, e.ENAME
+ from dept d 
+ left outer join emp e on e.DEPTNO = d.DEPTNO
+ union
+  select 
+ d.DEPTNO, d.DNAME, e.ENAME
+ from dept d 
+ right outer join emp e on e.DEPTNO = d.DEPTNO
+
+ --3.12 Using NULLs in Operations and Comparisons
+
+ use SQL_COOKBOOK
+ select 
+ ename,
+ coalesce(COMM, 0) COMM
+ from emp 
+ where isnull(comm, 0) < (select comm from emp where ename = 'ward')
+
+ --4.1 Inserting a New Record
+ insert into dept (DEPTNO, dname, loc) 
+ values (50, 'PROGRAMMING', 'BALTIMORE')
+
+ insert into dept values (50, 'PROGRAMMING', 'BALTIMORE'), (50, 'PROGRAMMING', 'CLEVELAND')
+
+ CREATE TABLE D (ID INTEGER DEFAULT 0)
+
+ SELECT * FROM D
+INSERT INTO D VALUES (DEFAULT)
+
+ SELECT * FROM D
+
+ INSERT INTO D VALUES ()
+ DROP TABLE D
+ CREATE TABLE D (ID INTEGER DEFAULT 0, FOO VARCHAR(10))
+
+ INSERT INTO D (FOO) VALUES ('BAR')
+
+ SELECT * FROM D
+
+ INSERT INTO D VALUES (NULL, 'BRIGHTEN')
+ INSERT INTO D (FOO) VALUES ('DARKEN')
+
+ --DEFAULT IS USED TO APPLY VALUES TO PREVENT NULLs.
+ CREATE TABLE dept_east
+ (
+	deptno integer, 
+	dname varchar(10), 
+	loc varchar(50)
+ )
+
+
+ insert into dept_east (deptno, dname, loc)
+ select deptno, dname, loc
+ from dept
+ where loc in ('NEW YORK', 'BOSTON')
+ 
+--para criar uma cópia vazia da tabela, sem os registros: usar um where que não retorna nada no select * into!!!
+select *
+into dept_2
+from dept
+where 1=0
+
+
+select * from dept_2
+
+select *
+into dept_west
+from dept
+where 1=0
+
+--insert all
+--when loc in ('NEW YORK','BOSTON') then
+--into dept_east (deptno,dname,loc) values (deptno,dname,loc)
+--when loc = 'CHICAGO' then
+--into dept_mid (deptno,dname,loc) values (deptno,dname,loc)
+--else
+--into dept_west (deptno,dname,loc) values (deptno,dname,loc)
+--select deptno,dname,loc
+--from dept
+
+--sql server does not support multitable inserts
