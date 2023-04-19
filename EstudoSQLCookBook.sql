@@ -901,3 +901,45 @@ where 1=0
 --from dept
 
 --sql server does not support multitable inserts
+
+--4.8 Modifying Records in a Table
+select 
+e.DEPTNO,
+e.ENAME,
+e.SAL
+from emp e
+where e.DEPTNO = 20
+order by 1,3 
+
+update emp
+set emp.sal = sal * 1.1
+where emp.DEPTNO = 20
+
+--4.9 Updating When Corresponding Rows Exist
+select distinct
+eb.empno,
+e.ENAME
+from emp_bonus eb
+left join emp e on e.EMPNO = eb.empno
+
+update emp
+set emp.SAL = emp.SAL * 1.20
+where emp.EMPNO in (select a.empno from emp_bonus a)
+
+update emp 
+set SAL = SAL * 1.20
+where exists (select null from emp_bonus where emp.EMPNO = emp_bonus.empno)
+
+--4.10 Updating with Values from Another Table
+create table new_sal (deptno integer, sal decimal(18,2))
+insert into new_sal values(10, 4000.0)
+
+update e
+	set e.sal = ns.sal,
+		e.comm = ns.sal/2
+	from emp e,
+		 new_sal ns
+	where ns.deptno = e.deptno
+
+	select * from emp
+	where emp.DEPTNO = 10
