@@ -943,3 +943,127 @@ update e
 
 	select * from emp
 	where emp.DEPTNO = 10
+
+--
+create table emp_commission (
+	deptno varchar(10),
+	empno varchar(10),
+	ename varchar(50),
+	comm decimal(18,2)
+)
+
+insert into emp_commission values (10,7782,'CLARK',null), (10,7839,'KING',null), (10,7934,'MILLER',null)
+
+SELECT * FROM emp_commission
+
+--merge into emp_commission ec
+--using (select * from emp) emp
+--	on (ec.empno = e.empno)
+-- when matched then
+--	update set ec.comm = 1000
+--	delete where (sal < 2000)
+--when not matched then
+--	insert (ec.empno, ec.ename, ec.deptno, ec.comm)
+--	values (emp.EMPNO, emp.ENAME, emp.DEPTNO, emp.COMM)
+
+
+create table tb_funcionario (
+	nome varchar(255),
+	dataCadastro datetime,
+	dataAlteracao datetime,
+	situacao bit
+)
+
+insert tb_funcionario values ('Marinho', getdate(), null, 1), ('Andrade', getdate(), null, 1), ('Souza', getdate(), null, 1)
+
+create table tb_funcionarioEmail (nome varchar(255), email varchar(255))
+insert tb_funcionarioEmail values ('Marinho', 'marinho@email.com'), ('Andrade', 'andrade@email.com'), ('Souza', 'souza@email.com'), ('Santos', 'santos@email.com')
+
+merge tb_funcionario as a
+using tb_funcionarioEmail as b
+on a.nome = b.nome
+when matched
+	then update set situacao = 0, dataAlteracao = getdate()
+when not matched
+	then insert (nome, dataCadastro, dataAlteracao, situacao) values (nome, getdate(), getdate(), 1)
+when not matched by source
+	then update set situacao = null, dataAlteracao = getdate();
+
+
+	insert tb_funcionarioEmail values ('Felisberto','felisberto@email.com')
+
+merge tb_funcionario as a
+using tb_funcionarioEmail as b
+on a.nome = b.nome
+when matched
+	then update set situacao = 0, dataAlteracao = getdate()
+when not matched
+	then insert (nome, dataCadastro, dataAlteracao, situacao) values (nome, getdate(), getdate(), 1)
+when not matched by source
+	then update set situacao = null, dataAlteracao = getdate();
+
+	select * from tb_funcionario
+
+--merge into emp_commission ec
+merge emp_commission as ec
+--using (select * from emp) emp
+using emp as e
+--	on (ec.empno = e.empno)
+on e.empno = ec.empno
+-- when matched then
+when matched
+	then update set    comm = 1000
+when matched
+	then delete where (sal < 2000)
+--	update set ec.comm = 1000
+--	delete where (sal < 2000)
+--when not matched then
+when not matched
+	then 
+	insert (empno, ename, deptno, comm)
+	values (e.EMPNO, e.ENAME, e.DEPTNO, e.COMM)
+
+	create table funcionarios2(
+		Id int,
+		Nome varchar(50),
+		Salario decimal(18,2),
+		temporario bit
+	)
+
+	insert funcionarios1 values (1, 'David', 200.00, 0), (2, 'Tim', 200.00, 0), (3, 'Mary', 200.00, 0), (4, 'Kevin', 200.00, 0)
+	insert funcionarios2 values (1, 'David', 200.00, 0), (2, 'Tim', 200.00, 0), (5, 'Aline', 200.00, 0), (6, 'Cook', 200.00, 0)
+
+	merge funcionarios1 as f1
+	using funcionarios2 as f2
+	on f1.id = f2.id
+	when matched
+		then update set temporario = 1
+	when not matched
+		then insert (id, nome, salario, temporario) values (id, nome, salario, 1);
+
+select * from funcionarios1
+select * from funcionarios2
+
+update f
+	set --f.temporario = 1,
+	    f.Salario = 500.00
+from funcionarios2 f
+where f.Id in (5)
+
+truncate table funcionarios1
+truncate table funcionarios2
+
+merge funcionarios1 as target
+using funcionarios2 as source
+on target.id = source.id
+when not matched by target
+	then insert (id, nome, salario, temporario)  
+		 values (source.id, source.nome, source.salario, source.temporario)
+when matched 
+	then update set target.temporario = source.temporario, target.salario = source.salario
+when not matched by source
+	then delete;
+
+select * from funcionarios1
+select * from funcionarios2
+		
