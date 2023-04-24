@@ -1066,4 +1066,122 @@ when not matched by source
 
 select * from funcionarios1
 select * from funcionarios2
-		
+
+merge emp_commission as ec
+using emp as e
+	on (ec.empno = e.empno)
+when matched by ec 
+then
+	update set ec.comm = 1000
+when matched by ec and e.sal < 2000 then 
+delete 
+when not matched then
+	insert (empno, ename, deptno, comm)
+	values (e.EMPNO, e.ENAME, e.DEPTNO, e.COMM);
+
+--4.16 Deleting Duplicate Records
+
+select * into emp_duplicates from emp
+
+insert emp_duplicates
+SELECT TOP (1000) [EMPNO]
+      ,[ENAME]
+      ,[JOB]
+      ,[MGR]
+      ,[HIREDATE]
+      ,[SAL]
+      ,[COMM]
+      ,[DEPTNO]
+  FROM [SQL_COOKBOOK].[dbo].[emp]
+
+select count(*) from emp_duplicates
+
+
+WITH CTE AS (
+SELECT 
+	   ROW_NUMBER() OVER (PARTITION BY [EMPNO], [ENAME],[JOB],[MGR],[HIREDATE],[SAL],[COMM],[DEPTNO] ORDER BY EMPNO) AS ROW
+	  ,[EMPNO]
+      ,[ENAME]
+      ,[JOB]
+      ,[MGR]
+      ,[HIREDATE]
+      ,[SAL]
+      ,[COMM]
+      ,[DEPTNO]
+  FROM [SQL_COOKBOOK].[dbo].emp_duplicates
+  )
+
+  DELETE FROM CTE
+  WHERE ROW > 1
+
+-- THIS IS A TECHNIQUE TO DELETE DUPLICATE RECORDS WHITOUT IDS... I USE IT EVER
+
+CREATE TABLE DUPES (ID INTEGER, NAME VARCHAR(10))
+INSERT DUPES VALUES (1, 'NAPOLEON'), 
+					(2, 'DYNAMITE'), 
+					(3, 'DYNAMITE'), 
+					(4, 'SHE SHELLS'), 
+					(5, 'SEA SHELLS'), 
+					(6, 'SEA SHELLS'), 
+					(7, 'SEA SHELLS')
+
+SELECT * FROM  DUPES WHERE ID NOT IN (SELECT MIN(ID) FROM DUPES GROUP BY NAME)
+DELETE FROM DUPES WHERE ID NOT IN(SELECT MIN(ID) FROM DUPES GROUP BY NAME)
+SELECT * FROM DUPES
+			 
+--4.17 Deleting Records Referenced from Another Table
+create table dept_accidents
+(
+	deptno varchar(10),
+	accident_name varchar(50)
+)
+
+insert dept_accidents values (10, 'BROKEN FOOT'), (10, 'FLESH WOUND'), (20, 'FIRE'), (20, 'FIRE'), (20, 'FLOOD'), (30, 'BRUISED GLUTE')
+
+SELECT * FROM sql_cookbook.dbo.emp
+where deptno in (select deptno from SQL_COOKBOOK.dbo.dept_accidents group by deptno having count(*) >= 3)
+
+
+select * from emp 
+where deptno in (
+select
+	a.deptno
+	from dept_accidents a
+group by a.deptno
+having count(*) >= 3 )
+
+--5.1 Listing Tables in a Schema
+
+select *
+from INFORMATION_SCHEMA.TABLES
+where TABLE_SCHEMA = 'dbo'
+
+--5.2 Listing a Table's columns
+
+select *
+from INFORMATION_SCHEMA.COLUMNS
+where TABLE_SCHEMA = 'dbo'
+and TABLE_NAME = 'emp'
+
+--5.3 Listing Indexed Columns for a Table
+select a.name table_name,
+	   b.name index_name,
+	   d.name column_name,
+	   c.index_column_id
+ FROM sys.tables a,
+	  sys.indexes b,
+	  sys.index_columns c,
+	  sys.columns d
+where a.object_id = b.object_id
+  and b.object_id = c.object_id
+  and b.index_id = c.index_id
+  and c.object_id = d.object_id
+  and c.column_id = d.column_id
+  and a.name	  = 'emp'
+
+alter table [dbo].[emp]
+add constraint ak_empno unique(empno)
+
+
+  select * from emp
+  insert emp values (7369, 'SMITH', 'CLERK',	7902,	'2005-12-17',	880.00,	0,	20)
