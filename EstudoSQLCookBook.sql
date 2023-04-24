@@ -1185,3 +1185,18 @@ add constraint ak_empno unique(empno)
 
   select * from emp
   insert emp values (7369, 'SMITH', 'CLERK',	7902,	'2005-12-17',	880.00,	0,	20)
+
+--5.4 Listing Constraints on a Table
+select
+		a.TABLE_NAME,
+		a.CONSTRAINT_NAME,
+		b.COLUMN_NAME,
+		a.CONSTRAINT_TYPE
+from 
+INFORMATION_SCHEMA.TABLE_CONSTRAINTS a,
+INFORMATION_SCHEMA.KEY_COLUMN_USAGE b
+where a.TABLE_NAME = 'emp'
+	  and a.TABLE_SCHEMA = 'dbo'
+	  and a.TABLE_NAME = b.TABLE_NAME
+	  and a.TABLE_SCHEMA = b.TABLE_SCHEMA
+	  and a.CONSTRAINT_NAME = b.CONSTRAINT_NAME
