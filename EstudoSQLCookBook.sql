@@ -1200,3 +1200,154 @@ where a.TABLE_NAME = 'emp'
 	  and a.TABLE_NAME = b.TABLE_NAME
 	  and a.TABLE_SCHEMA = b.TABLE_SCHEMA
 	  and a.CONSTRAINT_NAME = b.CONSTRAINT_NAME
+
+--5.6 Using SQL to Generate SQL
+use AdventureWorks2019
+select 'select count(*) ['+a.TABLE_NAME+' rows] from '+a.TABLE_SCHEMA + '.' + a.TABLE_NAME + ';' cnts
+from INFORMATION_SCHEMA.TABLES a
+
+select count(*) [rows] from V;
+select count(*) [rows] from tempEmp;
+select count(*) [rows] from sales_table;
+select count(*) [rows] from emp_duplicates;
+select count(*) [rows] from DUPES;
+select count(*) [rows] from clientes;
+select count(*) [rows] from dept_accidents;
+select count(*) [rows] from dept;
+select count(*) [rows] from emp;
+select count(*) [rows] from D;
+select count(*) [rows] from dept_2;
+select count(*) [rows] from dept_east;
+select count(*) [rows] from dept_mid;
+select count(*) [rows] from dept_west;
+select count(*) [rows] from new_sal;
+select count(*) [rows] from new_dept;
+select count(*) [rows] from emp_bonus;
+select count(*) [rows] from emp_commission;
+select count(*) [rows] from tb_funcionario;
+select count(*) [rows] from tb_funcionarioEmail;
+select count(*) [rows] from Vi;
+select count(*) [rows] from funcionarios1;
+select count(*) [rows] from funcionarios2;
+
+select count(*) [EmployeePayHistory rows] from HumanResources.EmployeePayHistory;
+select count(*) [SalesOrderHeaderSalesReason rows] from Sales.SalesOrderHeaderSalesReason;
+select count(*) [SalesPerson rows] from Sales.SalesPerson;
+select count(*) [Illustration rows] from Production.Illustration;
+select count(*) [JobCandidate rows] from HumanResources.JobCandidate;
+select count(*) [Location rows] from Production.Location;
+select count(*) [Password rows] from Person.Password;
+select count(*) [SalesPersonQuotaHistory rows] from Sales.SalesPersonQuotaHistory;
+select count(*) [Person rows] from Person.Person;
+select count(*) [SalesReason rows] from Sales.SalesReason;
+select count(*) [SalesTaxRate rows] from Sales.SalesTaxRate;
+select count(*) [PersonCreditCard rows] from Sales.PersonCreditCard;
+select count(*) [EmailAddress_bkp rows] from Person.EmailAddress_bkp;
+select count(*) [vAdditionalContactInfo rows] from Person.vAdditionalContactInfo;
+select count(*) [PersonPhone rows] from Person.PersonPhone;
+select count(*) [vEmployee rows] from HumanResources.vEmployee;
+select count(*) [SalesTerritory rows] from Sales.SalesTerritory;
+select count(*) [vEmployeeDepartment rows] from HumanResources.vEmployeeDepartment;
+select count(*) [PhoneNumberType rows] from Person.PhoneNumberType;
+select count(*) [vEmployeeDepartmentHistory rows] from HumanResources.vEmployeeDepartmentHistory;
+select count(*) [vIndividualCustomer rows] from Sales.vIndividualCustomer;
+select count(*) [Product rows] from Production.Product;
+select count(*) [vPersonDemographics rows] from Sales.vPersonDemographics;
+select count(*) [vJobCandidate rows] from HumanResources.vJobCandidate;
+select count(*) [vJobCandidateEmployment rows] from HumanResources.vJobCandidateEmployment;
+select count(*) [vJobCandidateEducation rows] from HumanResources.vJobCandidateEducation;
+select count(*) [vProductAndDescription rows] from Production.vProductAndDescription;
+select count(*) [vProductModelCatalogDescription rows] from Production.vProductModelCatalogDescription;
+select count(*) [vProductModelInstructions rows] from Production.vProductModelInstructions;
+select count(*) [vSalesPerson rows] from Sales.vSalesPerson;
+select count(*) [SalesTerritoryHistory rows] from Sales.SalesTerritoryHistory;
+select count(*) [vSalesPersonSalesByFiscalYears rows] from Sales.vSalesPersonSalesByFiscalYears;
+select count(*) [vStateProvinceCountryRegion rows] from Person.vStateProvinceCountryRegion;
+select count(*) [vStoreWithDemographics rows] from Sales.vStoreWithDemographics;
+select count(*) [vStoreWithContacts rows] from Sales.vStoreWithContacts;
+select count(*) [ScrapReason rows] from Production.ScrapReason;
+select count(*) [vStoreWithAddresses rows] from Sales.vStoreWithAddresses;
+select count(*) [vVendorWithContacts rows] from Purchasing.vVendorWithContacts;
+select count(*) [Shift rows] from HumanResources.Shift;
+select count(*) [NewCustomer rows] from Sales.NewCustomer;
+select count(*) [vVendorWithAddresses rows] from Purchasing.vVendorWithAddresses;
+select count(*) [ProductCategory rows] from Production.ProductCategory;
+select count(*) [ShipMethod rows] from Purchasing.ShipMethod;
+select count(*) [ProductCostHistory rows] from Production.ProductCostHistory;
+select count(*) [ProductDescription rows] from Production.ProductDescription;
+select count(*) [ShoppingCartItem rows] from Sales.ShoppingCartItem;
+select count(*) [ProductDocument rows] from Production.ProductDocument;
+select count(*) [DatabaseLog rows] from dbo.DatabaseLog;
+select count(*) [ProductInventory rows] from Production.ProductInventory;
+select count(*) [SpecialOffer rows] from Sales.SpecialOffer;
+select count(*) [ErrorLog rows] from dbo.ErrorLog;
+select count(*) [ProductListPriceHistory rows] from Production.ProductListPriceHistory;
+select count(*) [Address rows] from Person.Address;
+select count(*) [SpecialOfferProduct rows] from Sales.SpecialOfferProduct;
+select count(*) [ProductModel rows] from Production.ProductModel;
+select count(*) [AddressType rows] from Person.AddressType;
+select count(*) [StateProvince rows] from Person.StateProvince;
+select count(*) [ProductModelIllustration rows] from Production.ProductModelIllustration;
+select count(*) [AWBuildVersion rows] from dbo.AWBuildVersion;
+select count(*) [ProductModelProductDescriptionCulture rows] from Production.ProductModelProductDescriptionCulture;
+select count(*) [BillOfMaterials rows] from Production.BillOfMaterials;
+select count(*) [Store rows] from Sales.Store;
+select count(*) [ProductPhoto rows] from Production.ProductPhoto;
+select count(*) [ProductProductPhoto rows] from Production.ProductProductPhoto;
+select count(*) [TransactionHistory rows] from Production.TransactionHistory;
+select count(*) [vw01_DaosEmpregados rows] from dbo.vw01_DaosEmpregados;
+select count(*) [ProductReview rows] from Production.ProductReview;
+select count(*) [BusinessEntity rows] from Person.BusinessEntity;
+select count(*) [TransactionHistoryArchive rows] from Production.TransactionHistoryArchive;
+select count(*) [ProductSubcategory rows] from Production.ProductSubcategory;
+select count(*) [BusinessEntityAddress rows] from Person.BusinessEntityAddress;
+select count(*) [ProductVendor rows] from Purchasing.ProductVendor;
+select count(*) [BusinessEntityContact rows] from Person.BusinessEntityContact;
+select count(*) [UnitMeasure rows] from Production.UnitMeasure;
+select count(*) [Vendor rows] from Purchasing.Vendor;
+select count(*) [ContactType rows] from Person.ContactType;
+select count(*) [CountryRegionCurrency rows] from Sales.CountryRegionCurrency;
+select count(*) [CountryRegion rows] from Person.CountryRegion;
+select count(*) [WorkOrder rows] from Production.WorkOrder;
+select count(*) [PurchaseOrderDetail rows] from Purchasing.PurchaseOrderDetail;
+select count(*) [CreditCard rows] from Sales.CreditCard;
+select count(*) [Culture rows] from Production.Culture;
+select count(*) [WorkOrderRouting rows] from Production.WorkOrderRouting;
+select count(*) [Currency rows] from Sales.Currency;
+select count(*) [PurchaseOrderHeader rows] from Purchasing.PurchaseOrderHeader;
+select count(*) [CurrencyRate rows] from Sales.CurrencyRate;
+select count(*) [Customer rows] from Sales.Customer;
+select count(*) [Department rows] from HumanResources.Department;
+select count(*) [Document rows] from Production.Document;
+select count(*) [SalesOrderDetail rows] from Sales.SalesOrderDetail;
+select count(*) [EmailAddress rows] from Person.EmailAddress;
+select count(*) [Employee rows] from HumanResources.Employee;
+select count(*) [SalesOrderHeader rows] from Sales.SalesOrderHeader;
+select count(*) [EmployeeDepartmentHistory rows] from HumanResources.EmployeeDepartmentHistory;
+
+use SQL_COOKBOOK
+
+select 'alter table ', *
+  from INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+  where CONSTRAINT_TYPE = 'R'
+
+
+
+  --chapter 6
+  --Working with Strings
+  create table T10 (id integer)
+  insert into t10 values(1)
+  insert into t10 values(2)
+  insert into t10 values(3)
+  insert into t10 values(4)
+  insert into t10 values(5)
+  insert into t10 values(6)
+  insert into t10 values(7)
+  insert into t10 values(8)
+  insert into t10 values(9)
+  insert into t10 values(10)
+
+  select substring(e.ename, iter.pos, 1) as C
+	from (select ename from emp where  ename = 'FELISBERTO') e,
+	(select id as pos from t10) iter
+	where iter.pos <= len(e.ename)
