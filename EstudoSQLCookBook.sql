@@ -1335,7 +1335,7 @@ select 'alter table ', *
 
   --chapter 6
   --Working with Strings
-  create table T10 (id integer)
+  create table T10 (id integer) --pivot table
   insert into t10 values(1)
   insert into t10 values(2)
   insert into t10 values(3)
@@ -1347,7 +1347,141 @@ select 'alter table ', *
   insert into t10 values(9)
   insert into t10 values(10)
 
+  
   select substring(e.ename, iter.pos, 1) as C
 	from (select ename from emp where  ename = 'FELISBERTO') e,
 	(select id as pos from t10) iter
 	where iter.pos <= len(e.ename)
+
+	select e.ename, iter.pos
+	from (select ename from emp where ename = 'king') e,
+		 (select id as pos from t10) iter
+	
+
+	select e.ename, iter.pos
+	from (select ename from emp where ename = 'king') e,
+		 (select id as pos from t10) iter
+	where iter.pos <= len(e.ename)
+
+	select substring(e.ename, iter.pos, 1) as chr, iter.pos
+	from (select ename from emp where ename = 'king') e,
+		 (select id as pos from t10) iter
+	where iter.pos <= len(e.ename)
+
+	select substring(e.ename, iter.pos, iter.pos) as a, 
+		   substring(e.ename, len(e.ename) - iter.pos + 1, iter.pos + 1) x
+	from (select ename from emp where ename = 'king') e,
+		 (select id as pos from t10) iter
+	where iter.pos <= len(e.ename)
+
+	select stuff('71824561172', 5, 3, 'XXXXX') cpf
+
+	select 'g''day nate' qmarks union all
+	select 'beavers'' teeth' union all
+	select ''''
+
+	select 'apples core', 'apple''s core', case when '' is null then 0 else 1 end
+
+	--6.3 counting the occurrences of a character in a String
+	--para contar a quantidade de ocorrencias de um caracter numa string
+	select (len('10,clark,manager,felisberto') - len(replace('10,clark,manager,felisberto', ',', ''))) as cnt 
+
+	SELECT 
+		(len('HELLO HELLO') - len(replace('HELLO HELLO', 'LL',''))) / len('LL') as correct_cnt
+		,(len('HELLO HELLO') - LEN(REPLACE('HELLO HELLO', 'LL',''))) AS INCORRECT_CNT
+
+	--6.4 Removing Unwanted Characters from a String
+	select 
+		ename, 
+		replace(translate(ename, 'aeiou', 'aaaaa'), 'a', '') as stripped1,
+		sal,
+		replace(replace(cast(sal as char(12)), '0', ''), '.', '') stripped2,
+		sal 
+	from emp
+
+	select translate('sinval', 'aeiou', 'aaaaa')
+	--rules to use translate:
+    --	1# the second and the third argument, they should have the same length
+
+	select coalesce(sal, 0) sal
+		  ,translate(coalesce(sal, 0), '0123456789','**********')
+	from emp
+
+	select  * from emp
+
+	insert emp values (9811, 'geraldo','CLERK',	7902, '2005-12-17',	null, null, null)
+
+	truncate table t1
+
+	insert t1
+	select ename + substring(cast(coalesce(sal,0) as varchar(20)), 1, len(cast(coalesce(sal,0) as varchar(20))) - 3) as data from emp 
+
+	select *
+	from t1
+
+	select 
+		replace(translate(data, '0123456789', '0000000000'), '0', '') name,
+		substring(data, len(replace(translate(data, '0123456789', '0000000000'), '0', '')) +1, (len(data) - len(replace(translate(data, '0123456789', '0000000000'), '0', ''))))
+	from t1
+
+	select 
+		replace(translate(data, '0123456789', '0000000000'), '0', '') name,
+		cast(replace(translate(data, 'abcdefghijklmnopqrstuvwxyz', replicate('z', 26)), 'z', '') as numeric(18,2)) num
+	from t1
+
+	select 
+		replace(translate(data, '0123456789', '0000000000'), '0', '') name,
+		cast(replace(data, replace(translate(data, '0123456789', '0000000000'), '0', ''), '') as numeric(18,2)) sal
+	from t1
+	--6.6 Determining Whether a String is Alphanumeric
+	create view TestingView as
+		select ename as data
+		  from emp
+		 where deptno=10
+		union all
+	    select ename + ', $' + convert(varchar(max),sal)
+		  from emp
+		where deptno = 20
+		union all
+		 select ename + convert(varchar(max), sal)
+		  from emp
+		 where deptno = 30
+
+
+--drop view TestingView
+select data
+--,translate(data, '0123456789abcdefghijklmnopqrstuvwxyz.', replicate('x',37)) x
+--,replicate('x', len(data)) y
+--, len(data)
+from TestingView
+where translate(data, '0123456789abcdefghijklmnopqrstuvwxyz.', replicate('x', 37)) = replicate('x', len(data))
+
+select replace(
+	   replace(
+	   translate(replace('Stewie Griffin', '.', ''),
+						 'abcdefghijklmnopqrstuvwxyz',
+						 replicate('#', 26)), '#', ''), ' ', '.') + '.'
+
+declare @name varchar(150) =  'Stewie Griffin'
+
+select SUBSTRING(@name, 1, 1) +  '. ' +
+       substring(substring(@name, charindex(' ', @name) + 1, len(@name)), 1, 1) + '.'
+
+
+declare @nome varchar(150) = 'Sinval'
+SELECT UPPER(LEFT(@nome, 1)) + '.' + 
+       UPPER(LEFT(SUBSTRING(@nome, CHARINDEX(' ', @nome)+1, LEN(@nome)), 1)) + '.' + 
+	   UPPER(LEFT(SUBSTRING(@nome, CHARINDEX(' ', @nome, CHARINDEX(' ', @nome)+1)+1, LEN(@nome)), 1)) AS Iniciais
+
+--não consegui resolver o problema usando replace e translate, pois o meu sql server não faz distinção entre char maiúsculo ou minúsculo nos registros.
+--tive que apelar para o substring. usei o chatGPT pra mostrar um outro exemplo.
+
+select
+ename, substring(ename, len(ename) - 1, 2) last2
+from emp
+order by substring(ename, len(ename) - 1, 2) asc, ename desc
+
+--6.9 Ordering by a Number in a String
+create view v_TestOrdering as
+select e.ename +' '+ e.EMPNO +' '+ e.deptno
+from emp e
