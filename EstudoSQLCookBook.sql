@@ -1483,5 +1483,24 @@ order by substring(ename, len(ename) - 1, 2) asc, ename desc
 
 --6.9 Ordering by a Number in a String
 create view v_TestOrdering as
-select e.ename +' '+ e.EMPNO +' '+ e.deptno
+select e.ename +' '+ cast(coalesce(e.EMPNO, 0) as varchar(100)) +' '+ cast(coalesce(e.deptno, 0) as varchar(100)) data
 from emp e
+
+
+select *, cast(substring(data, charindex(' ', data) + 1, 4) as integer) valor
+from v_TestOrdering
+order by cast(substring(data, charindex(' ', data) + 1, 4) as integer)
+
+drop view v_TestOrdering
+
+create view v_TestOrdering as
+select e.ENAME + ' '+ cast(e.EMPNO as varchar(100))+ ' ' + d.DNAME as data
+from emp e
+join dept d on e.DEPTNO = d.DEPTNO
+
+select *
+from v_TestOrdering
+order by cast(
+			  replace(
+			  translate(data, 'abcdefghijklmnopqrstuvwxyz ', 
+			  replicate('#', 27)), '#', '') as integer) asc
