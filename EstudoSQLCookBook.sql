@@ -1529,13 +1529,35 @@ group by deptno
 --this is the kind of thing that I think that I will never use...
 --but it is so nice!
 --string_agg(xxx, '')  within group (order by xxxx)
-select distinct ename, STRING_AGG(c, '') within group (order by c) as letters
+select ename, STRING_AGG(c, '') within group (order by c) as letters
 from (
 	select a.ename, 
 		   substring(a.ename, iter.pos, 1) as c
 	from emp a,
 		(select id as pos from T10) iter
 		  where iter.pos <= len(a.ename)
-		  
+	
 ) x
 group by ename
+
+--6.14 Extrating the nth Delimited Susbstring
+create view v_DelimitedSubstring as
+select 'mo,larry,curly' as name
+union all
+select 'tina,gina,jaunita,regina,leena' as name
+
+select * from v_DelimitedSubstring
+
+with agg_tab(name)
+	as
+	(select STRING_AGG(name, ',') from v_DelimitedSubstring)
+select value, row_number() over(partition by value order by value) as row from 
+	string_split((select name from agg_tab), ',')
+
+
+create view v_IPNumber as
+select '111.22.3.4' as ip
+
+select * from v_IPNumber
+
+select value from string_split((select ip from v_IPNumber), '.')
