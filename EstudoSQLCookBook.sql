@@ -1498,9 +1498,44 @@ select e.ENAME + ' '+ cast(e.EMPNO as varchar(100))+ ' ' + d.DNAME as data
 from emp e
 join dept d on e.DEPTNO = d.DEPTNO
 
-select *
+select *, cast(
+			  replace(
+			  translate(data, 'abcdefghijklmnopqrstuvwxyz ', 
+			  replicate('#', 27)), '#', '') as integer)
 from v_TestOrdering
 order by cast(
 			  replace(
 			  translate(data, 'abcdefghijklmnopqrstuvwxyz ', 
 			  replicate('#', 27)), '#', '') as integer) asc
+
+--6.10 Creating a Delimited List from Table Rows
+delete e 
+from emp e
+where e.deptno is null
+
+select
+	e.DEPTNO,
+	e.ENAME
+from emp e
+order by 1
+
+select
+	DEPTNO,
+	STRING_AGG(ename, ',') as emps
+from emp 
+group by deptno
+
+--6.12 Alphabetizing a String
+--this is the kind of thing that I think that I will never use...
+--but it is so nice!
+--string_agg(xxx, '')  within group (order by xxxx)
+select distinct ename, STRING_AGG(c, '') within group (order by c) as letters
+from (
+	select a.ename, 
+		   substring(a.ename, iter.pos, 1) as c
+	from emp a,
+		(select id as pos from T10) iter
+		  where iter.pos <= len(a.ename)
+		  
+) x
+group by ename
